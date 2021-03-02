@@ -1,4 +1,4 @@
-version: '3'
+version: "3.3"
 
 services:
 
@@ -9,18 +9,18 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      ./data/nginx:/etc/nginx/conf.d
-      ./data/certbot/conf:/etc/letsencrypt
-      ./data/certbot/www:/var/www/certbot
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     environment:
-      - NGINX_HOST: ${NGINX_HOST}
+      - NGINX_HOST=${NGINX_HOST}
 
   certbot:
     image: certbot/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
-      ./data/certbot/conf:/etc/letsencrypt
-      ./data/certbot/www:/var/www/certbot
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -31,6 +31,6 @@ services:
       - 50000:50000
     container_name: jenkins
     volumes:
-      jenkins:/var/jenkins_home
-      /var/run/docker.sock:/var/run/docker.sock
-      /usr/local/bin/docker:/usr/local/bin/docker
+      - jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
